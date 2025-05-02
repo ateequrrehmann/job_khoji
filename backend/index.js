@@ -1,6 +1,9 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';   //we access the data in of frontend in backend
 import cors from 'cors';   //cross-origin resource sharing
+import dotenv from 'dotenv';  //to access the environment variables
+import connectDB from './utils/db.js';
+dotenv.config({});
 
 const app = express();
 
@@ -16,7 +19,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
+    connectDB();
     console.log(`Server is running on port ${PORT}`);
 })
