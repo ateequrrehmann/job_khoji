@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';   //we access the data in of frontend 
 import cors from 'cors';   //cross-origin resource sharing
 import dotenv from 'dotenv';  //to access the environment variables
 import connectDB from './utils/db.js';
+import userRoute from './routes/user.route.js';
 dotenv.config({});
 
 const app = express();
@@ -20,6 +21,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 const PORT = process.env.PORT || 3000;
+
+app.use('/api/v1/user', userRoute);
+// "http://localhost:8000/api/v1/user/register"
+// "http://localhost:8000//api/v1/user/login"
+// "http://localhost:8000/api/v1/user/profile/update"
 app.listen(PORT, () => {
     connectDB();
     console.log(`Server is running on port ${PORT}`);

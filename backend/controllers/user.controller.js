@@ -12,7 +12,7 @@ export const register = async (req, res) => {
             })
         }
         const user = await User.findOne({ email });
-        if (!user) {
+        if (user) {
             return res.status(400).json({
                 message: "User already exists with this email",
                 success: false
@@ -34,7 +34,7 @@ export const register = async (req, res) => {
         });
     } catch (error) {
         return res.status(500).json({
-            message: "Internal server error",
+            message: `Internal server error ${error}`,
             success: false
         })
     }
@@ -76,7 +76,7 @@ export const login = async (req, res) => {
 
         const token = jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: "1d" });
 
-        user = {
+        const userData = {
             _id: user._id,
             fullname: user.fullname,
             email: user.email,
@@ -87,12 +87,12 @@ export const login = async (req, res) => {
 
         return res.status(200).cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'strict' }).json({
             message: `Welcome back ${user.fullname}`,
-            user,
+            userData,
             success: true,
         })
     } catch (error) {
         return res.status(500).json({
-            message: "Internal server error",
+            message: `Internal server error ${error}`,
             success: false
         })
     }
@@ -107,25 +107,25 @@ export const logout = async (req, res) => {
         })
     } catch (error) {
         return res.status(500).json({
-            message: "Internal Server Error",
+            message: `Internal Server Error ${error}`,
             success: false
         })
     }
 }
 
 
+
 export const updateProfile = async (req, res) => {
     try {
         const { fullname, email, phoneNumber, bio, skills } = req.body;
         const file = req.file;
-        if (!fullname || !email || !phoneNumber || !bio || !skills) {
-            return res.status(400).json({
-                message: "Something is missing",
-                success: false
-            })
-        }
+
         //file yahan aaye gi
-        const skillsArray = skills.split(",");
+
+        let skillsArray;
+        if (skills) {
+            skillsArray = skills.split(",");
+        }
         const userId = req.id; //from middleware 
 
         let user = await User.findById(userId);
@@ -136,11 +136,28 @@ export const updateProfile = async (req, res) => {
             })
         }
         //data update
-        user.fullname = fullname;
-        user.email = email;
-        user.phoneNumber = phoneNumber;
-        user.profile.bio = bio;
-        user.profile.skills = skillsArray;
+
+        if (fullname) {
+            user.fullname = fullname;
+        }
+
+        if (email) {
+            user.email = email;
+        }
+
+        if (phoneNumber) {
+            user.phoneNumber = phoneNumber;
+        }
+
+        if (bio) {
+            user.profile.bio = bio;
+        }
+
+        if (skills) {
+            user.profile.skills = skillsArray;
+
+        }
+
 
         //resume left
 
@@ -155,12 +172,15 @@ export const updateProfile = async (req, res) => {
             profile: user.profile
         }
 
-        return req.status(200).json({
+        return res.status(200).json({
             message: "Profile updated successfully",
             user,
             success: true
         })
     } catch (error) {
-
+        return res.status(500).json({
+            message: `Internal server error ${error}`,
+            success: false
+        })
     }
 }
