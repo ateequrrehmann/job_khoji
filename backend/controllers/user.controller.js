@@ -137,46 +137,59 @@ export const updateProfile = async (req, res) => {
         }
         //data update
 
+        let count = 0;
         if (fullname) {
             user.fullname = fullname;
+            count += 1;
         }
 
         if (email) {
             user.email = email;
+            count += 1;
         }
 
         if (phoneNumber) {
             user.phoneNumber = phoneNumber;
+            count += 1;
         }
 
         if (bio) {
             user.profile.bio = bio;
+            count += 1;
         }
 
         if (skills) {
             user.profile.skills = skillsArray;
-
+            count += 1;
         }
-
-
         //resume left
+        if (count > 0) {
+            await user.save();
 
-        await user.save();
+            user = {
+                _id: user._id,
+                fullname: user.fullname,
+                email: user.email,
+                phoneNumber: user.phoneNumber,
+                role: user.role,
+                profile: user.profile
+            }
 
-        user = {
-            _id: user._id,
-            fullname: user.fullname,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            role: user.role,
-            profile: user.profile
+            return res.status(200).json({
+                message: "Profile updated successfully",
+                user,
+                success: true
+            })
         }
 
-        return res.status(200).json({
-            message: "Profile updated successfully",
-            user,
-            success: true
-        })
+        else {
+            return res.status(400).json({
+                message: "No data to update",
+                success: false
+            })
+        }
+
+
     } catch (error) {
         return res.status(500).json({
             message: `Internal server error ${error}`,

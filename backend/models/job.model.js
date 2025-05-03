@@ -20,6 +20,10 @@ const jobSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    experienceLevel: {
+        type: Number,
+        required: true
+    },
     jobType: {
         type: String,
         required: true
@@ -38,10 +42,10 @@ const jobSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },// as user means recruiter is creating the job
-    application: {
+    applications: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Application',
-    }
+    }]
 }, { timestamps: true });
 
 export const Job = mongoose.model('Job', jobSchema);
