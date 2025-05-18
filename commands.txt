@@ -1,0 +1,48 @@
+//when import always add the .js 
+
+// for backend in backend folder
+npm init  (just enter for all)
+npm i express mongoose nodemon jsonwebtoken bcryptjs cookie-parser dotenv
+npm i cors
+
+//add this in package.json 
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+
+after writing code in index.js
+
+//go to package.json
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+
+// now write "npm run dev"
+
+/////Creating database
+1. click create new project
+2. add name
+3. create on cluster
+4. choose free plan
+5. and deploy
+6. ok 2 steps
+7. wait and you got the 'url'
+8. copy it
+9. in side bar open the "network access" click on "add ip address" and select access from anywhere and done
+
+//create .env file
+MONGO_URI=mongodb+srv://rehmanateequr501:hf3qD3BdVnzsJtmj@cluster0.tojyv2j.mongodb.net/
+PORT=8000
+
+
+
+//post for registering
+//put for update
+//get for fetching data
+
+
+
+//".populate" is used to get all the information of the object using it ID
